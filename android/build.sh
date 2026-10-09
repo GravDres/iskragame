@@ -3,14 +3,33 @@ set -euo pipefail
 ISKRA_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ISKRA_TOOLS="${ISKRA_TOOLCHAIN:-$ISKRA_ROOT/.toolchain}"
 ISKRA_BUILD="$ISKRA_ROOT/android/build"
-ISKRA_BT="$ISKRA_TOOLS/buildtools"
-ISKRA_PLATFORM="$ISKRA_TOOLS/platform/android.jar"
-if [[ ! -f "$ISKRA_PLATFORM" || ! -f "$ISKRA_TOOLS/ecj.jar" ]]; then
-  echo 'Missing Android toolchain. Run python3 android/bootstrap.py first.' >&2
+ISKRA_BT="${ISKRA_BUILD_TOOLS:-$ISKRA_TOOLS/buildtools}"
+ISKRA_PLATFORM="${ISKRA_ANDROID_JAR:-$ISKRA_TOOLS/platform/android.jar}"
+missing=0
+for tool in java javac keytool python3; do
+  if ! command -v "$tool" >/dev/null 2>&1; then
+    echo "Missing executable: $tool (install a full JDK 21 and Python 3)." >&2
+    missing=1
+  fi
+done
+for file in "$ISKRA_PLATFORM" "$ISKRA_BT/lib/d8.jar" "$ISKRA_BT/lib/apksigner.jar"; do
+  if [[ ! -s "$file" ]]; then
+    echo "Missing Android toolchain file: $file" >&2
+    missing=1
+  fi
+done
+for tool in aapt aapt2 zipalign; do
+  if [[ ! -x "$ISKRA_BT/$tool" ]]; then
+    echo "Missing or non-executable Android tool: $ISKRA_BT/$tool" >&2
+    missing=1
+  fi
+done
+if [[ "$missing" == 1 ]]; then
+  echo 'In GitHub Actions check Install Android build tools. For a local build run python3 android/bootstrap.py.' >&2
   exit 1
 fi
 mkdir -p "$ISKRA_BUILD/classes" "$ISKRA_BUILD/dex" "$ISKRA_ROOT/dist"
-java -jar "$ISKRA_TOOLS/ecj.jar" -1.8 -proc:none -nowarn -bootclasspath "$ISKRA_PLATFORM" -d "$ISKRA_BUILD/classes" "$ISKRA_ROOT"/android/src/ru/iskra/frontier/*.java
+javac --release 8 -encoding UTF-8 -proc:none -classpath "$ISKRA_PLATFORM" -d "$ISKRA_BUILD/classes" "$ISKRA_ROOT"/android/src/ru/iskra/frontier/*.java
 python3 - "$ISKRA_BUILD" <<'PY'
 from pathlib import Path
 import sys,zipfile

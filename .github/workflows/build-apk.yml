@@ -53,15 +53,24 @@ jobs:
             yes | "$ISKRA_SDKMANAGER" --sdk_root="$ISKRA_SDK_ROOT" --licenses >/dev/null
           )
           "$ISKRA_SDKMANAGER" --sdk_root="$ISKRA_SDK_ROOT" 'platforms;android-35' 'build-tools;35.0.0'
+          ISKRA_ANDROID_JAR="$ISKRA_SDK_ROOT/platforms/android-35/android.jar"
+          ISKRA_BUILD_TOOLS="$ISKRA_SDK_ROOT/build-tools/35.0.0"
+          test -s "$ISKRA_ANDROID_JAR"
+          for tool in aapt aapt2 zipalign; do
+            test -x "$ISKRA_BUILD_TOOLS/$tool"
+          done
+          test -s "$ISKRA_BUILD_TOOLS/lib/d8.jar"
+          test -s "$ISKRA_BUILD_TOOLS/lib/apksigner.jar"
           mkdir -p .toolchain
           ln -sfn "$ISKRA_SDK_ROOT/platforms/android-35" .toolchain/platform
           ln -sfn "$ISKRA_SDK_ROOT/build-tools/35.0.0" .toolchain/buildtools
-          curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.40.0/ecj-3.40.0.jar' -o .toolchain/ecj.jar
           curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar' -o .toolchain/json.jar
+          printf 'ISKRA_ANDROID_JAR=%s\n' "$ISKRA_ANDROID_JAR" >> "$GITHUB_ENV"
+          printf 'ISKRA_BUILD_TOOLS=%s\n' "$ISKRA_BUILD_TOOLS" >> "$GITHUB_ENV"
       - name: Test LAN transport
         run: |
           mkdir -p android/build/nettests
-          java -jar .toolchain/ecj.jar -1.8 -proc:none -nowarn -cp .toolchain/json.jar -d android/build/nettests android/src/ru/iskra/frontier/LanRoom.java tests/LanRoomTest.java
+          javac --release 8 -encoding UTF-8 -proc:none -cp .toolchain/json.jar -d android/build/nettests android/src/ru/iskra/frontier/LanRoom.java tests/LanRoomTest.java
           java -cp 'android/build/nettests:.toolchain/json.jar' ru.iskra.frontier.LanRoomTest
       - name: Build and verify APK
         run: bash android/build.sh

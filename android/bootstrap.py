@@ -32,6 +32,5 @@ for url, filename, folder in [
             if path.is_file() and (path.suffix == '' or path.name in ('apksigner', 'd8')):
                 path.chmod(path.stat().st_mode | 0o111)
         archive.unlink()
-get('https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.40.0/ecj-3.40.0.jar', 'ecj.jar')
 get('https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar', 'json.jar')
 print('Toolchain ready:', TOOLS, flush=True)

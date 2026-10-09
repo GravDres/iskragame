@@ -73,9 +73,9 @@ python3 android/bootstrap.py
 bash android/build.sh
 ```
 
-Получишь `dist/Iskra-0.2.0.apk`. Gradle не требуется: ECJ компилирует Java, D8 создаёт DEX, AAPT2 упаковывает ресурсы и игровой код, zipalign и apksigner выравнивают и подписывают APK.
+Получишь `dist/Iskra-0.2.0.apk`. Gradle не требуется: Стандартный javac из JDK компилирует Java с --release 8, D8 создаёт DEX, AAPT2 упаковывает ресурсы и игровой код, zipalign и apksigner выравнивают и подписывают APK.
 
-При установленном Android SDK можно создать `.toolchain/platform` и `.toolchain/buildtools` как ссылки на `platforms/android-35` и `build-tools/35.0.0`, затем положить ECJ 3.40.0 в `.toolchain/ecj.jar`. Это автоматически делает workflow.
+При установленном Android SDK можно создать `.toolchain/platform` и `.toolchain/buildtools` как ссылки на `platforms/android-35` и `build-tools/35.0.0`, используя полный JDK 21 с javac. Workflow устанавливает SDK и передаёт абсолютные пути через `ISKRA_ANDROID_JAR` и `ISKRA_BUILD_TOOLS`; локально используются пути `.toolchain/platform/android.jar` и `.toolchain/buildtools`. ECJ не требуется.
 
 Просмотр версии для компьютера:
 
