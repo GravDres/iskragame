@@ -26,7 +26,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
       - name: Preserve alpha signing key between builds
         uses: actions/cache@v4
         with:
@@ -34,10 +33,29 @@ jobs:
           key: iskra-alpha-signing-v1
       - name: Install Android build tools
         run: |
-          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          ISKRA_SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          ISKRA_SDKMANAGER="$ISKRA_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager"
+          if [[ ! -x "$ISKRA_SDKMANAGER" ]]; then
+            for candidate in "$ISKRA_SDK_ROOT"/cmdline-tools/*/bin/sdkmanager; do
+              if [[ -x "$candidate" ]]; then
+                ISKRA_SDKMANAGER="$candidate"
+                break
+              fi
+            done
+          fi
+          if [[ ! -x "$ISKRA_SDKMANAGER" ]]; then
+            echo "sdkmanager not found in $ISKRA_SDK_ROOT/cmdline-tools" >&2
+            exit 1
+          fi
+          "$ISKRA_SDKMANAGER" --sdk_root="$ISKRA_SDK_ROOT" --version
+          (
+            set +o pipefail
+            yes | "$ISKRA_SDKMANAGER" --sdk_root="$ISKRA_SDK_ROOT" --licenses >/dev/null
+          )
+          "$ISKRA_SDKMANAGER" --sdk_root="$ISKRA_SDK_ROOT" 'platforms;android-35' 'build-tools;35.0.0'
           mkdir -p .toolchain
-          ln -s "$ANDROID_HOME/platforms/android-35" .toolchain/platform
-          ln -s "$ANDROID_HOME/build-tools/35.0.0" .toolchain/buildtools
+          ln -sfn "$ISKRA_SDK_ROOT/platforms/android-35" .toolchain/platform
+          ln -sfn "$ISKRA_SDK_ROOT/build-tools/35.0.0" .toolchain/buildtools
           curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.40.0/ecj-3.40.0.jar' -o .toolchain/ecj.jar
           curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar' -o .toolchain/json.jar
       - name: Test LAN transport
