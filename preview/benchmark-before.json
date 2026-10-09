@@ -1,0 +1,14 @@
+{
+  "chunkCount": 37,
+  "meshMs": 926.2,
+  "worstChunkMs": 74.6,
+  "medianFrameCPUms": 24.97,
+  "vertices": 335508,
+  "drawCalls": 39,
+  "heldBuilds": 24,
+  "creatureBuilds": 72,
+  "uploads": 48,
+  "bytes": 21321216,
+  "frames": 24,
+  "note": "Node with captured GL, CPU measurements only; not phone FPS"
+}

@@ -13,7 +13,7 @@
   <div id="vignette"></div><div id="damage"></div>
   <div id="boot"><div class="brand-small">ИСКРА / СОБСТВЕННЫЙ ДВИЖОК</div><div class="loader"></div><p>Мир просыпается…</p></div>
   <main id="menu" class="hidden">
-    <div class="menu-top"><span class="brand-small"><span class="spark-mark">✦</span> FRONTIER ENGINE</span><span class="version">АЛЬФА 0.2 · ANDROID</span></div>
+    <div class="menu-top"><span class="brand-small"><span class="spark-mark">✦</span> FRONTIER ENGINE</span><span class="version">АЛЬФА 0.3 · ANDROID</span></div>
     <div class="menu-body">
       <div class="intro"><div class="eyebrow"><i></i> ТВОЯ ИСТОРИЯ НАЧИНАЕТСЯ ЗДЕСЬ</div><h1>ИСКРА<span>ДИКИЙ РУБЕЖ</span></h1><p class="intro-copy">Построй убежище. Овладей стихиями.<br>Разбуди то, что скрывается в этом мире.</p><div class="world-chip"><span class="chip-dot"></span> ОДИН МИР · 4 БИОМА · 768 × 768</div></div>
       <div class="mode-panel"><div class="panel-caption">ВЫБЕРИ СВОЙ ПУТЬ <span>01 — 03</span></div>
@@ -33,9 +33,8 @@
     <div id="crosshair"><i></i><i></i><i></i><i></i></div><div id="mining-ring" class="hidden"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="20"/><circle id="mining-circle" cx="24" cy="24" r="20"/></svg></div>
     <div id="target-label"></div><div id="item-label"></div>
     <div id="joystick"><div class="joy-ring"></div><div id="joy-knob"></div></div>
-    <div id="spells"><button id="spell-fire" class="ability fire" data-icon="fire" aria-label="Огненный удар"><small>12</small></button><button id="spell-frost" class="ability frost" data-icon="frost" aria-label="Ледяной удар"><small>10</small></button></div>
-    <div id="actions"><button id="mine" class="action-small" data-icon="pick" aria-label="Копать"></button><button id="jump" class="action-small" data-icon="jump" aria-label="Прыжок"></button><button id="attack" class="attack-button" data-icon="aim" aria-label="Атака"></button></div>
-    <button id="sprint" class="sprint-button">БЕГ</button><button id="descend" class="sprint-button hidden">ВНИЗ</button><button id="reload" class="reload-button">↻ ПЕРЕЗАРЯДКА</button>
+    <div id="actions"><button id="jump" class="action-small" data-icon="jump" aria-label="Прыжок"></button><button id="attack" class="attack-button" aria-label="Копать"></button></div>
+    <div id="hit-marker" aria-hidden="true">×</div>
     <div id="hotbar"></div><div id="quick-tip">Двигайся джойстиком · Проводи справа, чтобы смотреть</div>
     <div id="network-label" class="hidden"></div><div id="performance" class="hidden"></div>
   </div>
@@ -43,6 +42,6 @@
   <section id="modal" class="hidden"><div class="modal-card"><div class="modal-header"><div><small id="modal-eyebrow">ДИКИЙ РУБЕЖ</small><h2 id="modal-title"></h2></div><button id="modal-close" class="close-button" aria-label="Закрыть">×</button></div><div id="modal-content"></div></div></section>
   <div id="toast" role="status"></div><input id="mod-file" type="file" accept="application/json,.json" class="hidden">
   <div id="portrait-hint">↻<span>Поверни телефон горизонтально</span></div>
-  <script src="content.js"></script><script src="world.js"></script><script src="geometry.js"></script><script src="models.js"></script><script src="engine.js"></script><script src="game.js"></script><script src="network.js"></script><script src="ui.js"></script>
+  <script src="content.js"></script><script src="world.js"></script><script src="geometry.js"></script><script src="models.js"></script><script src="creatures.js"></script><script src="engine.js"></script><script src="game.js"></script><script src="network.js"></script><script src="art.js"></script><script src="controls.js"></script><script src="ui.js"></script>
 </body>
 </html>

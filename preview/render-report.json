@@ -1,12 +1,57 @@
 {
-  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
-  "EGL": "1.5",
-  "shaderProgramsCompiled": 2,
-  "drawCommands": 40,
-  "glError": 0,
-  "resolution": [
-    1280,
-    720
-  ],
-  "note": "Actual engine frame rendered offscreen; Android WebView/UI still require browser/device checks."
+  "version": "0.3.0",
+  "frames": [
+    {
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "EGL": "1.5",
+      "shaderProgramsCompiled": 2,
+      "drawCommands": 36,
+      "glError": 0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "note": "Actual engine frame rendered offscreen; Android WebView/UI still require browser/device checks.",
+      "scene": "rifle"
+    },
+    {
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "EGL": "1.5",
+      "shaderProgramsCompiled": 2,
+      "drawCommands": 36,
+      "glError": 0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "note": "Actual engine frame rendered offscreen; Android WebView/UI still require browser/device checks.",
+      "scene": "frost"
+    },
+    {
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "EGL": "1.5",
+      "shaderProgramsCompiled": 2,
+      "drawCommands": 36,
+      "glError": 0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "note": "Actual engine frame rendered offscreen; Android WebView/UI still require browser/device checks.",
+      "scene": "sword"
+    },
+    {
+      "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+      "EGL": "1.5",
+      "shaderProgramsCompiled": 2,
+      "drawCommands": 46,
+      "glError": 0,
+      "resolution": [
+        1280,
+        720
+      ],
+      "note": "Actual engine frame rendered offscreen; Android WebView/UI still require browser/device checks.",
+      "scene": "bosses"
+    }
+  ]
 }

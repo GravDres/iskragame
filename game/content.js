@@ -1,6 +1,6 @@
 'use strict';
 const ISKRA = window.ISKRA = {};
-ISKRA.VERSION = '0.2.0';
+ISKRA.VERSION = '0.3.0';
 ISKRA.BLOCKS = [
   {name:'Воздух',solid:false},
   {name:'Дёрн',solid:true,tile:1,top:0,bottom:2,hard:0.55,drop:'dirt'},

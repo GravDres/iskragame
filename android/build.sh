@@ -51,7 +51,7 @@ PY
 if [[ ! -f "$ISKRA_BUILD/alpha.keystore" ]]; then
   keytool -genkeypair -keystore "$ISKRA_BUILD/alpha.keystore" -alias iskra-alpha -keyalg RSA -keysize 2048 -validity 3650 -storepass iskra-local-alpha -keypass iskra-local-alpha -dname 'CN=Iskra Alpha,O=Independent Development,C=RU'
 fi
-java -jar "$ISKRA_BT/lib/apksigner.jar" sign --ks "$ISKRA_BUILD/alpha.keystore" --ks-key-alias iskra-alpha --ks-pass pass:iskra-local-alpha --key-pass pass:iskra-local-alpha --out "$ISKRA_ROOT/dist/Iskra-0.2.0.apk" "$ISKRA_BUILD/aligned.apk"
-java -jar "$ISKRA_BT/lib/apksigner.jar" verify --verbose "$ISKRA_ROOT/dist/Iskra-0.2.0.apk"
-"$ISKRA_BT/aapt" dump badging "$ISKRA_ROOT/dist/Iskra-0.2.0.apk"
-echo "APK: $ISKRA_ROOT/dist/Iskra-0.2.0.apk"
+java -jar "$ISKRA_BT/lib/apksigner.jar" sign --ks "$ISKRA_BUILD/alpha.keystore" --ks-key-alias iskra-alpha --ks-pass pass:iskra-local-alpha --key-pass pass:iskra-local-alpha --out "$ISKRA_ROOT/dist/Iskra-0.3.0.apk" "$ISKRA_BUILD/aligned.apk"
+java -jar "$ISKRA_BT/lib/apksigner.jar" verify --verbose "$ISKRA_ROOT/dist/Iskra-0.3.0.apk"
+"$ISKRA_BT/aapt" dump badging "$ISKRA_ROOT/dist/Iskra-0.3.0.apk"
+echo "APK: $ISKRA_ROOT/dist/Iskra-0.3.0.apk"

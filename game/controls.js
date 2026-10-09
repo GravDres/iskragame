@@ -1,0 +1,21 @@
+'use strict';
+(function(I){
+// Independent touch owners: movement, look, action and jump can coexist.
+function stick(dx,dy,radius,dead=.06){const length=Math.hypot(dx,dy),amount=Math.min(1,length/radius);if(amount<=dead||!length)return {x:0,z:0,kx:0,ky:0,amount:0};const speed=Math.pow((amount-dead)/(1-dead),.8),scale=Math.min(radius,length)/length;return {x:dx/length*speed,z:-dy/length*speed,kx:dx*scale,ky:dy*scale,amount:speed};}
+class TouchControls{
+  constructor(game){this.g=game;this.points=new Map();this.owners={move:null,look:null,attack:null,jump:null};this.joy=document.getElementById('joystick');this.knob=document.getElementById('joy-knob');this.canvas=document.getElementById('world');this.lastJump=-1000;this.bind();}
+  bind(){document.addEventListener('pointerdown',e=>this.down(e));document.addEventListener('pointermove',e=>this.move(e),{passive:false});for(const type of ['pointerup','pointercancel','lostpointercapture'])document.addEventListener(type,e=>this.up(e));window.addEventListener('blur',()=>this.reset());}
+  down(e){const g=this.g;if(!g.active||g.modal||g.ui?.editingControls)return;let role=null;
+    if(e.target.closest('#attack'))role='attack';else if(e.target.closest('#jump'))role='jump';else if(e.target.closest('#joystick'))role='move';else if(e.target===this.canvas){if(e.pointerType==='mouse'){if(document.pointerLockElement===this.canvas){g.input.attack=e.button===0;g.input.mine=e.button===2;}else this.canvas.requestPointerLock?.();return;}role=g.settings.stickMode==='floating'&&e.clientX<(g.settings.leftHand?0:innerWidth*.38)&&e.clientY>innerHeight*.25?'move':'look';if(g.settings.leftHand&&g.settings.stickMode==='floating'&&e.clientX>innerWidth*.62&&e.clientY>innerHeight*.25)role='move';}
+    if(!role||this.owners[role]!==null)return;e.preventDefault();this.owners[role]=e.pointerId;const point={role,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,element:e.target.closest('button')||this.canvas};this.points.set(e.pointerId,point);try{point.element.setPointerCapture(e.pointerId);}catch(err){}
+    if(role==='move'){const r=this.joy.getBoundingClientRect();point.radius=r.width*.34;point.cx=r.left+r.width/2;point.cy=r.top+r.height/2;if(g.settings.stickMode==='floating'){point.cx=e.clientX;point.cy=e.clientY;this.joy.style.setProperty('--floating-x',e.clientX+'px');this.joy.style.setProperty('--floating-y',e.clientY+'px');this.joy.classList.add('floating');}this.joy.classList.add('engaged');this.updateStick(point,e);}
+    if(role==='attack')g.input.attack=true;
+    if(role==='jump'){const now=performance.now();if(g.mode==='creative'&&now-this.lastJump<300){g.player.flying=!g.player.flying;g.notify(g.player.flying?'Полёт: удерживай прыжок вверх, тяни кнопку вниз для снижения.':'Полёт выключен.');}this.lastJump=now;g.input.jump=true;}
+  }
+  updateStick(p,e){const s=stick(e.clientX-p.cx,e.clientY-p.cy,p.radius,this.g.settings.deadzone);this.g.input.x=s.x;this.g.input.z=s.z;this.g.input.sprint=!!this.g.settings.autoSprint&&s.amount>.94&&s.z>.55;const scale=this.joy.getBoundingClientRect().width/this.joy.offsetWidth||1;this.knob.style.transform=`translate(${s.kx/scale}px,${s.ky/scale}px)`;}
+  move(e){const p=this.points.get(e.pointerId);if(!p)return;e.preventDefault();if(p.role==='move')this.updateStick(p,e);if(p.role==='look'){this.g.aim(e.clientX-p.x,e.clientY-p.y,true);p.x=e.clientX;p.y=e.clientY;}if(p.role==='attack'){if(this.owners.look===null&&(p.aiming||Math.hypot(e.clientX-p.startX,e.clientY-p.startY)>8)){this.g.aim(e.clientX-p.x,e.clientY-p.y,true);p.aiming=true;}p.x=e.clientX;p.y=e.clientY;}if(p.role==='jump'&&this.g.player.flying){this.g.input.descend=e.clientY-p.startY>22;this.g.input.jump=!this.g.input.descend;}}
+  up(e){const p=this.points.get(e.pointerId);if(!p)return;this.points.delete(e.pointerId);this.owners[p.role]=null;if(p.role==='move'){this.g.input.x=0;this.g.input.z=0;this.g.input.sprint=false;this.knob.style.transform='';this.joy.classList.remove('floating','engaged');}if(p.role==='attack')this.g.input.attack=false;if(p.role==='jump'){this.g.input.jump=false;this.g.input.descend=false;}}
+  reset(){for(const id of [...this.points.keys()])this.up({pointerId:id});Object.assign(this.g.input,{x:0,z:0,jump:false,attack:false,mine:false,descend:false,sprint:false,keys:{}});}
+}
+I.Stick={sample:stick};I.TouchControls=TouchControls;
+})(ISKRA);

@@ -23,7 +23,7 @@ const gl={
 const ctx={fillStyle:'#000',strokeStyle:'#000',path:[],fillRect(x,y,w,h){atlas.push(['rect',this.fillStyle,x,y,w,h]);},strokeRect(x,y,w,h){atlas.push(['stroke',this.strokeStyle,x,y,w,h]);},beginPath(){this.path=[];},moveTo(x,y){this.path.push([x,y]);},lineTo(x,y){this.path.push([x,y]);},fill(){atlas.push(['polygon',this.fillStyle,...this.path]);},stroke(){atlas.push(['line',this.strokeStyle,...this.path]);}};
 global.window=global;global.innerWidth=1280;global.innerHeight=720;global.devicePixelRatio=1;global.requestAnimationFrame=()=>{};
 global.localStorage={getItem:()=>null,setItem:()=>{}};global.document={createElement:()=>({getContext:()=>ctx})};
-for(const file of ['content.js','world.js','geometry.js','models.js','engine.js','game.js'])vm.runInThisContext(fs.readFileSync(path.join(root,'game',file),'utf8'),{filename:file});
+for(const file of ['content.js','world.js','geometry.js','models.js','creatures.js','engine.js','game.js'])vm.runInThisContext(fs.readFileSync(path.join(root,'game',file),'utf8'),{filename:file});
 const weapon=process.argv[2]||'rifle';
 const canvas={width:1280,height:720,getContext:()=>gl};const g=new ISKRA.Game(canvas);g.settings.sound=false;g.settings.quality='balanced';g.settings.resolution='720';g.applySettings();g.active=true;g.modal=false;g.slot=2;g.hotbar[2]=weapon;g.time=135;
 const scene=process.argv[3]||'camp';

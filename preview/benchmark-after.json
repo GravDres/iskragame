@@ -1,0 +1,23 @@
+{
+  "chunkCount": 37,
+  "meshMs": 317.6,
+  "worstChunkMs": 22.3,
+  "medianFrameCPUms": 0.28,
+  "vertices": 160998,
+  "drawCalls": 33,
+  "heldBuilds": 1,
+  "creatureBuilds": 3,
+  "uploads": 10,
+  "bytes": 2575104,
+  "frames": 24,
+  "note": "Node with captured GL, CPU measurements only; not phone FPS",
+  "streaming": {
+    "completed": true,
+    "frames": 91,
+    "medianCPUms": 2.5,
+    "p95CPUms": 7.18,
+    "maxCPUms": 17.02,
+    "meshBudgetMS": 2.2,
+    "note": "Budget bounds generator scheduling; generation, GC and individual steps can exceed it."
+  }
+}

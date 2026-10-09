@@ -22,6 +22,8 @@ jobs:
         run: |
           for file in game/*.js; do node --check "$file"; done
           node tests/logic.cjs
+          node tests/mobile.cjs
+          node tests/renderer.cjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -78,18 +80,27 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Iskra-Android-APK
-          path: dist/Iskra-0.2.0.apk
+          path: dist/Iskra-0.3.0.apk
           if-no-files-found: error
           retention-days: 30
+  browser:
+    name: Check native touch and graphics
+    needs: android
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install browser for visual checks
+        timeout-minutes: 4
         run: |
           pip install playwright
           python -m playwright install --with-deps chromium
       - name: Check renderer and mobile interface
-        run: python tests/browser.py
+        timeout-minutes: 3
+        run: timeout 150s python tests/browser.py
       - name: Upload screenshots and browser report
         if: always()
         uses: actions/upload-artifact@v4
