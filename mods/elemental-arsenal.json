@@ -1,0 +1,10 @@
+{
+  "format": 1,
+  "name": "Стихийный арсенал",
+  "weapons": {
+    "fire": {"name": "Сердце вулкана", "damage": 65, "mana": 15, "burn": 6, "speed": 28},
+    "frost": {"name": "Дыхание зимы", "damage": 35, "freeze": 5, "mana": 12},
+    "rifle": {"name": "Штормовой автомат", "damage": 19, "rate": 0.09, "spread": 0.012},
+    "sword": {"name": "Клинок искры", "damage": 48, "range": 4.2}
+  }
+}

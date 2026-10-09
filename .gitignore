@@ -1,0 +1,9 @@
+.toolchain/
+android/build/
+dist/*.apk
+dist/*.idsig
+dist/*.png
+dist/*.json
+__pycache__/
+*.keystore
+*.jks

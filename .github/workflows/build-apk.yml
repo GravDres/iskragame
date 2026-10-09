@@ -1,0 +1,74 @@
+name: Build Iskra APK
+
+on:
+  push:
+    branches: ['main', 'master']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android:
+    name: Test and build Android
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript and gameplay
+        run: |
+          for file in game/*.js; do node --check "$file"; done
+          node tests/logic.cjs
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Preserve alpha signing key between builds
+        uses: actions/cache@v4
+        with:
+          path: android/build/alpha.keystore
+          key: iskra-alpha-signing-v1
+      - name: Install Android build tools
+        run: |
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          mkdir -p .toolchain
+          ln -s "$ANDROID_HOME/platforms/android-35" .toolchain/platform
+          ln -s "$ANDROID_HOME/build-tools/35.0.0" .toolchain/buildtools
+          curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.40.0/ecj-3.40.0.jar' -o .toolchain/ecj.jar
+          curl --fail --retry 3 -L 'https://repo.maven.apache.org/maven2/org/json/json/20240303/json-20240303.jar' -o .toolchain/json.jar
+      - name: Test LAN transport
+        run: |
+          mkdir -p android/build/nettests
+          java -jar .toolchain/ecj.jar -1.8 -proc:none -nowarn -cp .toolchain/json.jar -d android/build/nettests android/src/ru/iskra/frontier/LanRoom.java tests/LanRoomTest.java
+          java -cp 'android/build/nettests:.toolchain/json.jar' ru.iskra.frontier.LanRoomTest
+      - name: Build and verify APK
+        run: bash android/build.sh
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Iskra-Android-APK
+          path: dist/Iskra-0.2.0.apk
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser for visual checks
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Check renderer and mobile interface
+        run: python tests/browser.py
+      - name: Upload screenshots and browser report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Iskra-Preview
+          path: |
+            dist/*.png
+            dist/browser-report.json
+          if-no-files-found: ignore
